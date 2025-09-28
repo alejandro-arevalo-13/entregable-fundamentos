@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Online - EcoMarket</title>
+    <link rel="stylesheet" href="bootstrap.css">
+    
+    <script src="bootstrap.js"></script>
+    <style>
+
+        #carrito-flotante {
+        position: fixed;
+        bottom: 20px;
+        right: 30px;   
+        z-index: 1000; 
+        }
+        #btn-carrito {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1050;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        }
+        #carrito-flotante ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 10px 0;
+        max-height: 150px;
+        overflow-y: auto;
+        }
+        
+        .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1055;
+        }
+        .dark-mode{
+            background-color: #121212 !important;
+            color: #fff;
+        }
+
+        .dark-mode .card{
+            background-color: #121212;
+            color: #fff;
+        }
+        .dark-mode .card-title,
+        .dark-mode h2,
+        .dark-mode h5{
+            color: #fff !important;
+        }
+
+
+        body{
+            font-family: roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .navbar{
+            background-color: rgb(227, 73, 30);
+        }
+        .navbar-brand, .nav-link{
+            color: #fff !important;
+        }
+        .hero {
+            background: linear-gradient(135deg, #2e7d32, #66bb6a);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .card{
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        .card img{
+            border-top-left-radius: 12px 12px 0 0;
+            border-top-right-radius: 12px 12px 0 0;
+        }
+        .btn-eco {
+            background-color: #2e7d32;
+            color: white;
+            border-radius: 20px;
+        }
+        .btn-eco:hover{
+            background-color: #66bb6a;
+        }
+        footer {
+            background-color: #29dca6;
+            color: rgb(28, 5, 5);
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        .card-img-top{
+            border-radius: 12px 12px 0 0;
+        }
+        .card-body{
+            padding: 20px;
+        }
+        .card-title{
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .card-text{
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+
+    </style>
+
+</head>
+
+<body id="body">
+
+    <!--Inicio bloque carrito -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasCartLabel">Tu carrito</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column">
+    <div id="cart-items" class="list-group mb-3"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <strong>Total:</strong>
+      <h5 id="cart-total" class="mb-0">S/ 0.00</h5>
+    </div>
+    <div class="d-grid">
+      <button id="checkout-btn" class="btn btn-success">Finalizar compra</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- Contenedor global de toasts -->
+<div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index:1200;"></div>
+
+<!-- Botón flotante del carrito -->
+<button class="btn btn-warning rounded-circle shadow position-fixed bottom-0 end-0 m-4 position-relative"
+        id="btn-carrito"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasCart"
+        aria-controls="offcanvasCart">🛒
+  <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+</button>
+<!--Fin bloque carrito-->
+        
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container fluid">
+            <a class="navbar-brand fw-bold fs-4" href="#">EcoMarket</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#Inicio">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="#Productos">Productos</a></li>
+                <li class="nav-item"><a class="nav-link" href="#Contacto">Contacto</a></li>
+            
+            </ul>
+        </div>
+        
+        </div>
+        <!--Este es para el buscador-->
+        <div class="container my-4">
+            <input id="buscador" type="text" class="form-control" placeholder="Buscar producto...">
+        </div>
+        <!--Aqui termina la funcion del buscador-->
+
+    </nav>
+    
+
+    <header class="bg-success text-white text-center py-5">        
+        <h1 class="display-4 fw-bold">Bienvenidos a la tienda online EcoMarket</h1>
+        <p class="lead">Productos totalmente organicos</p>
+        <a href="#Productos" class="btn btn-primary"> Ver Productos</a>
+        <button class="btn btn-primary me-2" onclick='cambiarTema()'>Cambiar Tema</button>
+
+
+        
+        
+    </header>
+
+     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top"> 
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Productos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            </div>
+            </nav>
+
+    <main class="container my-5">
+        <section id="Inicio" class="mb-5">
+            <div class="text-center mb-4">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStcO7hdphp-czFex5o93ISj--zW_X9tpZL4A&s" alt="Foto de EcoMarket">
+                <p class="text-center"> EcoMarket una tienda online con los mejores productos</p>
+
+    <section id="Productos" class="mb-5">
+        <h2 class="mb-4 text-center">Nuestros Productos</h2>
+          
+
+        <h2 class="text-success text-center categoria">Frutas</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4 producto" data-categoria="Frutas">
+                  <a href="project.html?id=fresas" class="text-decoration-none text-dark">
+                <div class="card shadow-sm h-100">
+                    <img src="https://pubmiddleware.mims.com/resource/image/E31797E2-8504-4D92-B812-A5F1007B9954/OriginalThumbnail/THUMBNAIL_Fotolia_86160823.strawberries.jpg" class="card-img-top" alt="Producto 1">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Fresas frescas</h5>
+                        <p class="card-text text-center">Frescas 100% organicas y naturales</p>
+                        <p class="text-center"><strong>$ 3.50</strong></p>
+                    </a>
+                        <div class="d-flex justify-content-center">
+                        <button class="btn btn-eco text-center">Agregar al carrito</button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+            <div class="col-md-4 mb-4 producto" data-categoria="Frutas">
+                <a href="project.html?id=pina" class="text-decoration-none text-dark">
+                <div class="card shadow-sm h-100">
+                    <img src="https://www.miamarket.pe/assets/uploads/9a0a2e448cafaa308b539781ccaf0096.jpg" class="card-img-top" alt="Producto 2">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Piña Golden</h5>
+                        <p class="card-text text-center">Pulpa dorada y jugosa</p>
+                        <p class="text-center"><strong>$ 6.00 x kg</strong></p>
+                         </a>
+                        <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-center">
+                        <button class="btn btn-eco">Agregar al carrito</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>              
+            </div>
+
+            <div class="col-md-4 mb-4 producto" data-categoria="Frutas">
+                <a href="project.html?id=mango" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100">
+                        <img src="https://eatgreen.hk/media/fresh-produce/kent-mango_hua27a660d88f23b4d9bab5d522c8a72f3_201317_600x0_resize_q90_box.jpg" class="card-img-top" alt="Producto 3">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Mango Kent</h5>
+                                <p class="card-text text-center">Mango dulce y jugoso, ideal para jugos y postres</p>
+                                <p class="text-center"><strong>$ 4.50 x kg</strong></p>
+                            </a>
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            <div class="col-md-4 mb-4 producto" data-categoria="Frutas">
+                <a href="project.html?id=palta" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.LL6RsBUqvLl-9oDZIYpEwQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img-top" alt="Producto 4">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Palta Hass</h5>
+                                <p class="card-text text-center">Cremosa, rica en grasas saludables</p>
+                                <p class="text-center"><strong>$ 8.80 x kg</strong></p>
+                                 </a>
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+            <div class="col-md-4 mb-4 producto" data-categoria="Frutas">
+                <a href="project.html?id=papaya" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.Q0hnhrJLGwLsCGGNyIk6IgHaEM?rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img-top" alt="Producto 5">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Papaya</h5>
+                                <p class="card-text text-center">Papaya grande, jugosa y fácil de digerir</p>
+                                <p class="text-center"><strong>$ 5.00 x kg</strong></p>
+                                </a>
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            <div class="col-md-4 mb-4 producto" data-categoria="Frutas">
+                <a href="project.html?id=uva" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://tse1.mm.bing.net/th/id/OIP.I2qTGpHVWgUXPyxarTkWgwHaE8?w=528&h=352&rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img-top" alt="Producto 6">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Uva</h5>
+                                <p class="card-text text-center">Uva grande perfecta para mesa</p>
+                                <p class="text-center"><strong>$ 4.50 x kg</strong></p>
+                                </a>
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+            <div class="col-md-4 mb-4 producto">
+                <a href="project.html?id=maracuya" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://tse1.mm.bing.net/th/id/OIP.zrjLwr2uCxOlBn1WtqhOigHaGh?rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img-top" alt="Producto 7">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Maracuyá</h5>
+                                <p class="card-text text-center">Fruta ácida</p>
+                                <p class="text-center"><strong>$ 6.50 x kg</strong></p>
+                                </a>
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            <div class="col-md-4 mb-4 producto" data-categoria="Frutas">
+                <a href="project.html?id=platano" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://imgmedia.buenazo.pe/475x475/buenazo/original/2020/09/26/5f6f51332c629774da0419a4.jpg" class="card-img-top" alt="Producto 8">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Plátano de Seda</h5>
+                                <p class="card-text text-center">Plátano fresco, perfecto para batidos</p>
+                                <p class="text-center"><strong>$ 3.20 x kg</strong></p>
+                    </a>
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            <h2 class="text-success text-center linear-gradient categoria">Verduras</h2>
+            <div class="row">
+            
+            <div class="col-md-4 mb-4 producto" data-categoria="Verduras">
+                <a href="project.html?id=papa-amarilla" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://www.huertou.cl/wp-content/uploads/2021/04/papa-amarilla-peruana.jpg" class="card-img-top" alt="Producto 9">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Papa Amarilla</h5>
+                                <p class="card-text text-center">Suave, perfecta para puré o causa</p>
+                                <p class="text-center"><strong>$ 3.30 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            <div class="col-md-4 mb-4 producto" data-categoria="Verduras">
+                <a href="project.html?id=camote-amarillo" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://static.wixstatic.com/media/e2f23a_969f5cae30b344f68aa6bc672a43113a~mv2.jpg/v1/fit/w_500,h_500,q_90/file.jpg" class="card-img-top" alt="Producto 10">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Camote amarillo</h5>
+                                <p class="card-text text-center">Dulce, nutritivo</p>
+                                <p class="text-center"><strong>$ 3.90 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Verduras">
+                <a href="project.html?id=yuca" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://th.bing.com/th/id/R.19b622713db62905a4df22b345a602fe?rik=13gyCO3nKY87hQ&pid=ImgRaw&r=0" class="card-img-top" alt="Producto 11">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Yuca Fresca</h5>
+                                <p class="card-text text-center">Suave, perfecta para frituras y sopas</p>
+                                <p class="text-center"><strong>$ 3.50 x kg</strong></p>
+                            </a>    
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+            <div class="col-md-4 mb-4 producto" data-categoria="Verduras">
+                <a href="project.html?id=zapallo-macre" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://tse1.explicit.bing.net/th/id/OIP.9TMVe13TUv7t33AFEHFBXAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img-top" alt="Producto 12">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Zapallo macre </h5>
+                                <p class="card-text text-center">Muy usado en sopas y cremas</p>
+                                <p class="text-center"><strong>$ 4.20 x kg</strong></p>
+                                <div class="d-flex justify-content-center">
+                                </a>
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Verduras">
+                <a href="project.html?id=cebolla-roja" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://tse3.mm.bing.net/th/id/OIP.OZ8SA-6gtaI2FynYikfPWQHaFT?rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img-top" alt="Producto 13">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Cebolla roja</h5>
+                                <p class="card-text text-center">Indispensable en la cocina</p>
+                                <p class="text-center"><strong>$ 2.50 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Verduras">
+                <a href="project.html?id=Zanahoria" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.RbpYlBwRGT8ATestHwCZFAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" class="card-img-top" alt="Producto 14">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Zanahoria</h5>
+                                <p class="card-text text-center">Rica en vitamina A, para sopas y ensaladas</p>
+                                <p class="text-center"><strong>$ 2.80 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Verduras">
+                <a href="project.html?id=tomate-italiano" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://comercial-gran-hortifruti.s3.amazonaws.com/media/uploads/produto/tomate_italiano_kg_feb58116-6480-4c32-9f39-8eecd71433e9.jpeg" class="card-img-top" alt="Producto 15">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Tomate italiano</h5>
+                                <p class="card-text text-center">Tomate rojo y jugoso, ideal para ensaladas y salsas</p>
+                                <p class="text-center"><strong>$ 3.85 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Verduras">
+                <a href="project.html?id=lechuga-criolla" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://th.bing.com/th/id/R.85185820761fbb5e77b80f9b382fbd75?rik=arbOffDL6Tkc8w&riu=http%3a%2f%2facdn.mitiendanube.com%2fstores%2f001%2f252%2f117%2fproducts%2flechuga_francesa1-8ae4c80a323e6aaade15939074336693-640-0.png&ehk=Aph9CB4jLwxygpvmyRLtsg2Iadle902AsUgj5puzG2w%3d&risl=&pid=ImgRaw&r=0" class="card-img-top" alt="Producto 16">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Lechuga criolla</h5>
+                                <p class="card-text text-center">Hojas verdes y suaves, perfecta para ensaladas</p>
+                                <p class="text-center"><strong>$ 1.80 c/u </strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            <h2 class="mb-3 text-success text-center categoria">Legumbres</h2>
+            <div class="row">
+             <div class="col-md-4 mb-4 producto" data-categoria="Legumbres">
+                <a href="project.html?id=lenteja-serrana" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://harinasygranos.com/wp-content/uploads/2022/10/7.png" class="card-img-top" alt="Producto 17">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Lenteja Serrana</h5>
+                                <p class="card-text text-center">Más pequeña y de cocción rápida</p>
+                                <p class="text-center"><strong>$ 6.50 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Legumbres">
+                <a href="project.html?id=frijol-canario" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://th.bing.com/th/id/R.e75639037a97ac5326f96467e2d3b3be?rik=f%2bpHf79auTozhw&riu=http%3a%2f%2finkagronort.weebly.com%2fuploads%2f2%2f3%2f8%2f7%2f23878324%2f480705.jpg%3f280&ehk=cNzlD5n4AhP2sLorSKQMHUoskBiFXFZg8cocjvsIzlU%3d&risl=&pid=ImgRaw&r=0" class="card-img-top" alt="Producto 18">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Frijol Canario</h5>
+                                <p class="card-text text-center">Clasico en guisos </p>
+                                <p class="text-center"><strong>$ 7.80 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Legumbres">
+                <a href="project.html?id=arveja-verde" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://superfreshmarket.com.ve/wp-content/uploads/2021/02/arvejas-partidas-fresh-Fresh.jpg" class="card-img-top" alt="Producto 19">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Arveja Verde Partida</h5>
+                                <p class="card-text text-center">Rica en vitaminas</p>
+                                <p class="text-center"><strong>$ 6.80 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Legumbres">
+                <a href="project.html?id=haba-verde" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://mercampo.pe/wp-content/uploads/2021/12/habas-verde-pelada-600x600.jpg" class="card-img-top" alt="Producto 20">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Haba Verde</h5>
+                                <p class="card-text text-center">Fresca y saludable</p>
+                                <p class="text-center"><strong>$ 4.80 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+            <h2 class="mb-3 text-success text-center categoria">Granos</h2>
+            <div class="row">
+             <div class="col-md-4 mb-4 producto" data-categoria="Granos">
+                <a href="project.html?id=quinoa-blanca" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://www.pehuenalimentos.cl/wp-content/uploads/2020/04/quinoa-blanca.gif" class="card-img-top" alt="Producto 21">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Quinoa blanca</h5>
+                                <p class="card-text text-center">Superalimento andino, rico en proteínas</p>
+                                <p class="text-center"><strong>$ 12.00 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Granos">
+                <a href="project.html?id=kiwicha" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://th.bing.com/th/id/R.60823ea6f7bdd9423aafb4a281fe73b5?rik=6BYg45V583d9Rg&riu=http%3a%2f%2fimg.21food.com%2f20110609%2fproduct%2f1211270574687.jpg&ehk=9gtiUwAJjpscMps9QPetP6ApCKP%2fdIx5FsZULAJDi6g%3d&risl=&pid=ImgRaw&r=0" class="card-img-top" alt="Producto 22">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Kiwicha</h5>
+                                <p class="card-text text-center">Pequeño grano andino, ideal para desayunos</p>
+                                <p class="text-center"><strong>$ 9.50 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Granos">
+                <a href="project.html?id=maiz-morado" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://http2.mlstatic.com/D_NQ_NP_699372-MCO73572007039_122023-O.webp" class="card-img-top" alt="Producto 23">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Maiz Morado x Kg</h5>
+                                <p class="card-text text-center">Base para refrescos</p>
+                                <p class="text-center"><strong>$ 5.50 x kg</strong></p>
+                    </a>            
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+             <div class="col-md-4 mb-4 producto" data-categoria="Granos">
+                <a href="project.html?id=avena" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://hebmx.vtexassets.com/arquivos/ids/585798/292027_image.jpg?v=638218482034670000" class="card-img-top" alt="Producto 24">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Avena en grano</h5>
+                                <p class="card-text text-center">Cereal nutritivo, ideal para sopas, mazamorras o bebidas</p>
+                                <p class="text-center"><strong>$ 7.70 x kg</strong></p>
+                </a>                
+                                <div class="d-flex justify-content-center">
+                                <button class="btn btn-eco">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+
+    </section> 
+
+
+    </main>
+    <footer id="Contacto" class="bg-dark text-white pt-5 pb-3">
+        <div class="container">
+        <div class="row align-items-start">
+
+            <div class="col-md-2 mb-3 d-flex justify-content-start">
+            <img src="images/logoTienda.png" alt="EcoMarket" class="footer-logo">
+            </div>
+
+
+        <div class="col-md-3 mb-3">
+            <h5 class="text-center fw-bold">EcoMarket</h5>
+            <ul class="list-unstyled">
+                <li><a href="acerca-de-nosotros.html" class="text-white text-decoration-none">Acerca de nosotros</a></li>
+                <li><a href="nuestros-beneficios.html" class="text-white text-decoration-none">Nuestros beneficios</a></li>
+                <li><a href="contactanos.html" class="text-white text-decoration-none">Contáctanos</a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <h5 class="fw-bold">Contáctanos</h5>
+            <p mb-1><a href="mailto:tienda-online@ecomarket.pe" class="text-white">tienda-online@ecomarket.pe</a></p>
+            <p class="mb-1">Piura - Tumbes</p>
+            <p><a href="tel:+51984165728" class="text-white">+51 984165728</a></p>
+            </div>
+
+        </div>
+
+        <hr class="border-light">
+        <p class="text-center fw-bold">&copy; 2025 EcoMarket. Todos los derechos reservados</p>
+    </footer>
+
+    <script src="bootstrap.bundle.min.js"></script>
+
+
+    <script>
+  let carrito = [];
+
+  const cartItems = document.getElementById("cart-items");
+  const cartTotal = document.getElementById("cart-total");
+  const cartCount = document.getElementById("cart-count");
+  const btnCarrito = document.getElementById("btn-carrito");
+
+  if (btnCarrito) {
+    btnCarrito.addEventListener("click", () => {
+      const offcanvas = new bootstrap.Offcanvas(document.getElementById("offcanvasCart"));
+      offcanvas.show();
+    });
+  }
+
+  function actualizarCarrito() {
+    cartItems.innerHTML = "";
+    let total = 0;
+
+    carrito.forEach((item, index) => {
+      total += item.precio;
+
+      const li = document.createElement("div");
+      li.className = "list-group-item d-flex justify-content-between align-items-center";
+      li.innerHTML = `
+        <span>${item.nombre}</span>
+        <span>S/ ${item.precio.toFixed(2)}</span>
+        <button class="btn btn-sm btn-danger">X</button>
+      `;
+
+      // Eliminar producto
+      li.querySelector("button").addEventListener("click", () => {
+        carrito.splice(index, 1);
+        actualizarCarrito();
+      });
+
+      cartItems.appendChild(li);
+    });
+
+    cartCount.textContent = carrito.length;
+    cartTotal.textContent = `S/ ${total.toFixed(2)}`;
+
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    actualizarCarrito();
+
+    const botones = document.querySelectorAll(".btn-eco");
+    botones.forEach(boton => {
+      boton.addEventListener("click", (e) => {
+        const card = e.target.closest(".card");
+        const nombre = card.querySelector(".card-title").textContent;
+        const precioTexto = card.querySelector("strong").textContent
+          .replace("$", "")
+          .replace("x kg", "")
+          .trim();
+        const precio = parseFloat(precioTexto);
+
+        carrito.push({ nombre, precio });
+        actualizarCarrito();
+      });
+    });
+  });
+
+const checkoutBtn = document.getElementById("checkout-btn");
+
+checkoutBtn.addEventListener("click", () => {
+  if (carrito.length === 0) {
+    alert("Tu carrito está vacío. Agrega productos antes de continuar.");
+  } else {
+    alert("¡Gracias por tu compra en EcoMarket! Tu pedido está en proceso.");
+
+    carrito.length = 0;
+    actualizarCarrito();
+    document.getElementById("cart-count").textContent = "0"; // reset contador
+  }
+});
+</script>
+
+
+<script src="buscador.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contactanos</title>
+    <link rel="stylesheet" href="bootstrap.css">
+    <style>
+    .contact-section {
+  background: linear-gradient(135deg, #e8f5e9, #ffffff);
+}
+
+.contact-section h2 {
+  font-size: 2rem;
+  color: #2e7d32;
+}
+
+.contact-section form {
+  border: 1px solid #dcdcdc;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-section form:hover {
+  transform: scale(1.01);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.contact-section .form-control {
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.contact-section .btn-success {
+  border-radius: 25px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.contact-section .btn-success:hover {
+  background: #1b5e20;
+}
+
+</style>
+</head>
+
+<body>
+    
+    <header class="bg-success text-white text-center py-5">
+        <h1 class="display-4 fw-bold">EcoMarket</h1>
+        <p class="lead">Productos totalmente organicos</p>
+    </header>
+
+    <section id="Contacto" class="contact-section py-5">
+  <div class="container">
+    <h2 class="mb-4 text-center fw-bold text-success">📩 Contáctanos</h2>
+    <p class="text-center text-muted mb-5">¿Tienes alguna pregunta o sugerencia? Escríbenos y te responderemos pronto.</p>
+
+    <form class="col-md-8 mx-auto shadow p-4 rounded bg-white">
+      <div class="mb-3">
+        <label for="nombre" class="form-label ">Nombre</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="correo" class="form-label fw-semibold">Correo electrónico</label>
+        <input type="email" class="form-control" id="correo" placeholder="ejemplo@email.com" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="mensaje" class="form-label fw-semibold">Mensaje</label>
+        <textarea class="form-control" id="mensaje" name="mensaje" rows="4" placeholder="Escribe tu mensaje aquí..." required></textarea>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-success px-5">Enviar</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+</body>
+</html>

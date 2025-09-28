@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="project-title">EcoMarket - Detalle Producto</title>
+  <link rel="stylesheet" href="bootstrap.css">
+  <style>
+    #detalles-productos .row {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    #detalles-productos h2 {
+      font-size: 2rem;
+    }
+
+    #detalles-productos p {
+      line-height: 1.6;
+    }
+
+    #detalles-productos img {
+      transition: transform 0.3s ease;
+    }
+
+    #detalles-productos img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <!--Inicio bloque carrito -->
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasCartLabel">Tu carrito</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column">
+    <div id="cart-items" class="list-group mb-3"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <strong>Total:</strong>
+      <h5 id="cart-total" class="mb-0">S/ 0.00</h5>
+    </div>
+    <div class="d-grid">
+      <button id="checkout-btn" class="btn btn-success">Finalizar compra</button>
+      
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index:1200;"></div>
+
+<button class="btn btn-warning rounded-circle shadow position-fixed bottom-0 end-0 m-4 position-relative"
+        id="btn-carrito"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasCart"
+        aria-controls="offcanvasCart">🛒
+  <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+</button>
+
+
+  <header class="bg-primary text-white text-center py-4">
+        <h1 class="display-4 fw-bold">EcoMarket</h1>
+        <p class="lead">Productos totalmente orgánicos</p>
+    </header>
+  <header class="bg-success text-white text-center py-4">
+    <h1 class="h2">Detalle del Producto</h1>
+  </header>
+
+  <main class="container my-5">
+    <div id="detalles-productos">
+    </div>
+  </main>
+  
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+    <p class="mb-0">&copy; 2025 EcoMarket. Todos los derechos reservados</p>
+  </footer>
+
+ 
+  <script src="bootstrap.bundle.min.js"></script>
+  <script src="projects.js"></script>
+
+</body>
+</html>
+
